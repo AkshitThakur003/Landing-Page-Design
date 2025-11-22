@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ResumeCraft | Intelligent Career Architecture</title>
+    <meta name="description" content="Craft the career you deserve with AI-powered resume analysis, semantic JD matching, and a Kanban job tracker." />
+    <meta property="og:title" content="ResumeCraft - AI Career Toolkit" />
+    <meta property="og:description" content="Stop guessing. Start crafting. The all-in-one workspace for your job search." />
+    
+    <!-- Google Fonts: Plus Jakarta Sans for a modern, geometric yet human feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            },
+            colors: {
+              brand: {
+                50: '#eff4ff',
+                100: '#dbeafe',
+                200: '#bfdbfe',
+                300: '#93c5fd',
+                400: '#60a5fa',
+                500: '#3b82f6', // Primary Blue
+                600: '#2563eb',
+                700: '#1d4ed8',
+                800: '#1e40af',
+                900: '#1e3a8a',
+                950: '#172554',
+              },
+              slate: {
+                850: '#151F32', // Custom deep background
+              }
+            },
+            animation: {
+              'float': 'float 6s ease-in-out infinite',
+              'float-delayed': 'float 6s ease-in-out 3s infinite',
+              'float-slow': 'float 8s ease-in-out infinite',
+              'float-fast': 'float 4s ease-in-out infinite',
+              'float-subtle': 'floatSubtle 5s ease-in-out infinite',
+              'marquee': 'marquee 40s linear infinite',
+              'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+              'scan': 'scan 3s ease-in-out infinite',
+              'shimmer': 'shimmer 2s linear infinite',
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'drag-drop': 'dragDrop 4s ease-in-out infinite',
+              'pulse-ring': 'pulseRing 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'wave': 'wave 15s linear infinite',
+              'wave-slow': 'wave 25s linear infinite',
+              'wave-slower': 'wave 35s linear infinite',
+              'breathe': 'breathe 4s ease-in-out infinite',
+              'cursor-move': 'cursorMove 4s ease-in-out infinite',
+              'type': 'type 4s steps(20) infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              },
+              floatSubtle: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-8px)' },
+              },
+              marquee: {
+                '0%': { transform: 'translateX(0)' },
+                '100%': { transform: 'translateX(-50%)' },
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              scan: {
+                '0%, 100%': { top: '-10%', opacity: 0 },
+                '15%': { opacity: 1 },
+                '85%': { opacity: 1 },
+                '100%': { top: '110%', opacity: 0 },
+              },
+              shimmer: {
+                '0%': { transform: 'translateX(-100%)' },
+                '100%': { transform: 'translateX(100%)' }
+              },
+              dragDrop: {
+                '0%': { transform: 'translate(0, 0) rotate(0deg)', zIndex: '20' },
+                '10%': { transform: 'translate(0, 0) rotate(0deg)', zIndex: '20' }, // Wait for cursor
+                '15%': { transform: 'translate(0, -5px) rotate(2deg) scale(1.02)', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.15)', zIndex: '50' }, // Grab
+                '50%': { transform: 'translate(120px, -5px) rotate(2deg) scale(1.02)', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.15)', zIndex: '50' }, // Move
+                '60%': { transform: 'translate(120px, 0) rotate(0deg) scale(1)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', zIndex: '20' }, // Drop
+                '85%': { transform: 'translate(120px, 0)', opacity: '1' },
+                '90%': { transform: 'translate(120px, 0)', opacity: '0' }, // Fade out
+                '95%': { transform: 'translate(0, 0)', opacity: '0' }, // Reset pos hidden
+                '100%': { transform: 'translate(0, 0)', opacity: '1' } // Fade in
+              },
+              pulseRing: {
+                '0%': { transform: 'scale(0.8)', opacity: '0.4' },
+                '100%': { transform: 'scale(2.2)', opacity: '0' }
+              },
+              wave: {
+                '0%': { transform: 'translateX(0)' },
+                '100%': { transform: 'translateX(-50%)' },
+              },
+              breathe: {
+                '0%, 100%': { transform: 'scale(1)' },
+                '50%': { transform: 'scale(1.02)' },
+              },
+              cursorMove: {
+                '0%': { transform: 'translate(20px, 40px)', opacity: '0' },
+                '5%': { transform: 'translate(20px, 40px)', opacity: '1' },
+                '10%': { transform: 'translate(0, 0)', opacity: '1' }, // Arrive at card
+                '12%': { transform: 'scale(0.9)' }, // Click press
+                '15%': { transform: 'scale(1)' }, // Click release (grab)
+                '50%': { transform: 'translate(120px, 0)', opacity: '1' }, // Move to col 2
+                '60%': { transform: 'translate(120px, 10px)', opacity: '1' }, // Drop
+                '85%': { opacity: '1' },
+                '90%': { opacity: '0' },
+                '100%': { opacity: '0', transform: 'translate(20px, 40px)' }
+              },
+              type: {
+                '0%': { width: '0' },
+                '10%': { width: '0' },
+                '50%': { width: '100%' },
+                '90%': { width: '100%' },
+                '100%': { width: '0' }
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+      
+      /* Hide scrollbar for horizontal scrolling areas but keep functionality */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      
+      /* Glassmorphism Utilities */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+      }
+      
+      .glass-dark {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+  }
+}
+</script>
+</head>
+  <body class="bg-slate-50 text-slate-900 antialiased selection:bg-brand-200 selection:text-brand-900">
+    <div id="root"></div>
+  </body>
+</html>

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
+import gsap from 'gsap';
 
 const faqs = [
   {
@@ -20,49 +21,34 @@ const faqs = [
   }
 ];
 
-const FAQItem = ({ faq, isOpen, onClick, id }: { faq: typeof faqs[0], isOpen: boolean, onClick: () => void, id: string }) => {
+const FAQItem = ({ faq, isOpen, onClick }: { faq: typeof faqs[0], isOpen: boolean, onClick: () => void }) => {
   const contentRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState<number>(0);
   
-  const headerId = `${id}-header`;
-  const contentId = `${id}-content`;
-
   useEffect(() => {
     if (isOpen) {
-      const updateHeight = () => {
-        if (contentRef.current) {
-          setHeight(contentRef.current.scrollHeight);
-        }
-      };
-
-      // Initial measurement
-      updateHeight();
-
-      // Update on resize to handle text wrapping changes
-      const resizeObserver = new ResizeObserver(() => {
-        updateHeight();
+      gsap.to(contentRef.current, {
+        height: "auto",
+        opacity: 1,
+        duration: 0.4,
+        ease: "power2.out"
       });
-
-      if (contentRef.current) {
-        resizeObserver.observe(contentRef.current);
-      }
-
-      return () => resizeObserver.disconnect();
     } else {
-      setHeight(0);
+      gsap.to(contentRef.current, {
+        height: 0,
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.out"
+      });
     }
-  }, [isOpen, faq.answer]);
+  }, [isOpen]);
 
   return (
     <div 
-      className={`border border-slate-200 rounded-2xl overflow-hidden transition-colors duration-300 hover:border-brand-200 ${
-        isOpen ? 'border-brand-200 ring-1 ring-brand-100 bg-slate-50/50' : 'bg-white'
+      className={`border border-slate-200 rounded-2xl overflow-hidden transition-all duration-300 hover:border-brand-200 ${
+        isOpen ? 'border-brand-200 ring-1 ring-brand-100 bg-slate-50/60 shadow-sm' : 'bg-white'
       }`}
     >
       <button 
-        id={headerId}
-        aria-expanded={isOpen}
-        aria-controls={contentId}
         className="w-full flex items-center justify-between p-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-inset rounded-2xl group select-none"
         onClick={onClick}
       >
@@ -72,8 +58,7 @@ const FAQItem = ({ faq, isOpen, onClick, id }: { faq: typeof faqs[0], isOpen: bo
           {faq.question}
         </span>
         <div 
-          aria-hidden="true"
-          className={`relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+          className={`relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
             isOpen ? 'bg-brand-100 text-brand-600 rotate-180' : 'bg-slate-100 text-slate-500 group-hover:bg-brand-50 group-hover:text-brand-500 rotate-0'
         }`}>
           <ChevronDown 
@@ -82,17 +67,10 @@ const FAQItem = ({ faq, isOpen, onClick, id }: { faq: typeof faqs[0], isOpen: bo
         </div>
       </button>
       <div 
-        id={contentId}
-        role="region"
-        aria-labelledby={headerId}
-        className="overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[max-height,opacity]"
-        style={{ 
-          maxHeight: isOpen ? `${height}px` : '0px',
-          opacity: isOpen ? 1 : 0,
-          visibility: isOpen || height > 0 ? 'visible' : 'hidden'
-        }}
+        ref={contentRef}
+        className="overflow-hidden h-0 opacity-0"
       >
-        <div ref={contentRef} className="p-6 pt-0 text-slate-600 leading-relaxed">
+        <div className="px-6 pb-6 pt-0 text-slate-600 leading-relaxed">
           {faq.answer}
         </div>
       </div>
@@ -102,17 +80,35 @@ const FAQItem = ({ faq, isOpen, onClick, id }: { faq: typeof faqs[0], isOpen: bo
 
 export const FAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const containerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+       gsap.fromTo(".faq-title", 
+         { y: 30, opacity: 0 },
+         { 
+           y: 0, 
+           opacity: 1, 
+           duration: 0.8, 
+           scrollTrigger: {
+             trigger: ".faq-title",
+             start: "top 85%"
+           }
+         }
+       );
+    }, containerRef);
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section id="faq" className="py-24 bg-white">
+    <section ref={containerRef} id="faq" className="py-24 bg-white">
       <div className="max-w-3xl mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-12 text-center">Frequently Asked Questions</h2>
+        <h2 className="faq-title text-3xl md:text-4xl font-bold text-slate-900 mb-12 text-center opacity-0">Frequently Asked Questions</h2>
         
-        <div className="space-y-4">
+        <div className="space-y-6">
           {faqs.map((faq, index) => (
             <FAQItem 
               key={index} 
-              id={`faq-item-${index}`}
               faq={faq} 
               isOpen={openIndex === index} 
               onClick={() => setOpenIndex(openIndex === index ? null : index)} 

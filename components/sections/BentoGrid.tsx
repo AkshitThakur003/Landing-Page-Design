@@ -1,6 +1,7 @@
-
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Search, BellRing, Kanban, BrainCircuit, NotebookPen } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 interface IconTooltipProps {
   content: string;
@@ -24,10 +25,33 @@ const IconTooltip = ({ content, children, theme = 'dark' }: IconTooltipProps) =>
 };
 
 export const BentoGrid: React.FC = () => {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Staggered reveal of grid items
+      ScrollTrigger.batch(".bento-card", {
+        onEnter: (batch) => {
+          gsap.to(batch, {
+            autoAlpha: 1,
+            y: 0,
+            stagger: 0.1,
+            duration: 0.8,
+            ease: "power3.out"
+          });
+        },
+        start: "top 85%",
+        once: true
+      });
+    }, gridRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="features" className="py-24 bg-white">
+    <section ref={gridRef} id="features" className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16 max-w-2xl mx-auto">
+        <div className="text-center mb-16 max-w-2xl mx-auto opacity-0 translate-y-10 bento-card">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Complete command center.</h2>
           <p className="text-slate-600">Everything you need to manage your job search, from first draft to final offer, in one unified workspace.</p>
         </div>
@@ -35,19 +59,21 @@ export const BentoGrid: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px] md:auto-rows-[320px]">
           
           {/* Card 1: AI Analyzer (Large) */}
-          <div className="md:col-span-2 bg-slate-50 hover:bg-brand-50 rounded-3xl p-8 border border-slate-100 overflow-hidden relative group 
-            transition-all duration-300 ease-in-out
-            hover:border-brand-200 hover:shadow-[0_0_30px_rgba(59,130,246,0.3)] hover:scale-[1.02]">
+          <div className="bento-card opacity-0 translate-y-10 md:col-span-2 bg-slate-50 hover:bg-brand-50 rounded-3xl p-8 border border-slate-100 overflow-hidden relative group 
+            transition-all duration-500 ease-out
+            hover:border-brand-200 hover:shadow-[0_0_30px_rgba(59,130,246,0.3)] hover:scale-[1.01]">
             
-            <div className="relative z-10 animate-fade-in-up">
-              <div className="transition-transform duration-300 group-hover:-translate-y-1">
+            <div className="relative z-10">
+              <div className="transition-all duration-700 ease-out group-hover:-translate-y-2 group-hover:opacity-100 opacity-80">
                 <IconTooltip content="Vector-based profile comparison">
                   <div className="w-12 h-12 bg-white group-hover:bg-white/80 transition-colors duration-300 rounded-xl shadow-sm border border-slate-100 flex items-center justify-center mb-4 text-brand-600">
                     <BrainCircuit size={24} />
                   </div>
                 </IconTooltip>
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">Deep AI Analysis</h3>
-                <p className="text-slate-600 max-w-md">Our vector engine deconstructs your resume against millions of successful profiles to give you actionable, sentence-level improvements.</p>
+                <div>
+                    <h3 className="text-2xl font-bold text-slate-900 mb-2">Deep AI Analysis</h3>
+                    <p className="text-slate-600 max-w-md">Our vector engine deconstructs your resume against millions of successful profiles to give you actionable, sentence-level improvements.</p>
+                </div>
               </div>
             </div>
             {/* Decor element */}
@@ -63,19 +89,21 @@ export const BentoGrid: React.FC = () => {
           </div>
 
           {/* Card 2: Job Tracker (Vertical) */}
-          <div className="md:row-span-2 bg-slate-900 hover:bg-slate-800 rounded-3xl p-8 border border-slate-800 relative overflow-hidden group 
-            transition-all duration-300 ease-in-out
-            hover:border-slate-600 hover:shadow-2xl hover:shadow-brand-900/40 hover:scale-[1.02]">
+          <div className="bento-card opacity-0 translate-y-10 md:row-span-2 bg-slate-900 hover:bg-slate-800 rounded-3xl p-8 border border-slate-800 relative overflow-hidden group 
+            transition-all duration-500 ease-out
+            hover:border-slate-600 hover:shadow-2xl hover:shadow-brand-900/40 hover:scale-[1.01]">
             
-            <div className="relative z-10 animate-fade-in-up">
-              <div className="transition-transform duration-300 group-hover:-translate-y-1">
+            <div className="relative z-10">
+              <div className="transition-all duration-700 ease-out group-hover:-translate-y-2 group-hover:opacity-100 opacity-80">
                 <IconTooltip content="Drag-and-drop application tracking" theme="light">
                   <div className="w-12 h-12 bg-slate-800 group-hover:bg-slate-700 transition-colors duration-300 rounded-xl shadow-sm border border-slate-700 flex items-center justify-center mb-4 text-blue-400">
                     <Kanban size={24} />
                   </div>
                 </IconTooltip>
-                <h3 className="text-2xl font-bold text-white mb-2">Kanban Workflow</h3>
-                <p className="text-slate-400">Drag, drop, and automate your status updates.</p>
+                <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Kanban Workflow</h3>
+                    <p className="text-slate-400">Drag, drop, and automate your status updates.</p>
+                </div>
               </div>
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
@@ -91,53 +119,59 @@ export const BentoGrid: React.FC = () => {
           </div>
 
           {/* Card 3: JD Match */}
-          <div className="bg-white hover:bg-orange-50 rounded-3xl p-8 border border-slate-200 group
-            transition-all duration-300 ease-in-out
-            hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/10 hover:scale-[1.02]">
-             <div className="relative z-10 animate-fade-in-up">
-               <div className="transition-transform duration-300 group-hover:-translate-y-1">
+          <div className="bento-card opacity-0 translate-y-10 bg-white hover:bg-orange-50 rounded-3xl p-8 border border-slate-200 group
+            transition-all duration-500 ease-out
+            hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/10 hover:scale-[1.01]">
+             <div className="relative z-10">
+               <div className="transition-all duration-700 ease-out group-hover:-translate-y-2 group-hover:opacity-100 opacity-80">
                  <IconTooltip content="Identify missing keywords instantly">
                    <div className="w-12 h-12 bg-orange-50 group-hover:bg-orange-100 transition-colors duration-300 rounded-xl flex items-center justify-center mb-4 text-orange-600">
                       <Search size={24} />
                     </div>
                   </IconTooltip>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">Semantic Match</h3>
-                  <p className="text-slate-500 text-sm">Paste a JD and see exactly what keywords you're missing in real-time.</p>
+                  <div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">Semantic Match</h3>
+                      <p className="text-slate-500 text-sm">Paste a JD and see exactly what keywords you're missing in real-time.</p>
+                  </div>
                </div>
              </div>
           </div>
 
            {/* Card 4: Notification Hub */}
-           <div className="bg-white hover:bg-purple-50 rounded-3xl p-8 border border-slate-200 group
-            transition-all duration-300 ease-in-out
-            hover:border-purple-200 hover:shadow-xl hover:shadow-purple-500/10 hover:scale-[1.02]">
-             <div className="relative z-10 animate-fade-in-up">
-               <div className="transition-transform duration-300 group-hover:-translate-y-1">
+           <div className="bento-card opacity-0 translate-y-10 bg-white hover:bg-purple-50 rounded-3xl p-8 border border-slate-200 group
+            transition-all duration-500 ease-out
+            hover:border-purple-200 hover:shadow-xl hover:shadow-purple-500/10 hover:scale-[1.01]">
+             <div className="relative z-10">
+               <div className="transition-all duration-700 ease-out group-hover:-translate-y-2 group-hover:opacity-100 opacity-80">
                  <IconTooltip content="Instant application updates">
                    <div className="w-12 h-12 bg-purple-50 group-hover:bg-purple-100 transition-colors duration-300 rounded-xl flex items-center justify-center mb-4 text-purple-600">
                       <BellRing size={24} />
                     </div>
                   </IconTooltip>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">Smart Alerts</h3>
-                  <p className="text-slate-500 text-sm">Get notified when a recruiter views your profile or an application stalls.</p>
+                  <div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">Smart Alerts</h3>
+                      <p className="text-slate-500 text-sm">Get notified when a recruiter views your profile or an application stalls.</p>
+                  </div>
                </div>
              </div>
           </div>
 
            {/* Card 5: Research Notes (Span 2) */}
-           <div className="md:col-span-2 bg-gradient-to-br from-brand-50 to-white hover:from-brand-100 hover:to-brand-50/30 rounded-3xl p-8 border border-brand-100 relative overflow-hidden group 
-            transition-all duration-300 ease-in-out
-            hover:border-brand-300 hover:shadow-xl hover:shadow-brand-500/10 hover:scale-[1.02]">
-              <div className="relative z-10 animate-fade-in-up">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 transition-transform duration-300 group-hover:-translate-y-1">
-                  <div className="max-w-xs">
+           <div className="bento-card opacity-0 translate-y-10 md:col-span-2 bg-gradient-to-br from-brand-50 to-white hover:from-brand-100 hover:to-brand-50/30 rounded-3xl p-8 border border-brand-100 relative overflow-hidden group 
+            transition-all duration-500 ease-out
+            hover:border-brand-300 hover:shadow-xl hover:shadow-brand-500/10 hover:scale-[1.01]">
+              <div className="relative z-10">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all duration-300 group-hover:-translate-y-1">
+                  <div className="max-w-xs group-hover:opacity-100 opacity-80 transition-all duration-700 ease-out group-hover:-translate-y-2">
                      <IconTooltip content="Contextual research & salary data">
                        <div className="w-12 h-12 bg-white group-hover:bg-white/80 transition-colors duration-300 rounded-xl shadow-sm border border-brand-100 flex items-center justify-center mb-4 text-brand-600">
                         <NotebookPen size={24} />
                       </div>
                     </IconTooltip>
-                    <h3 className="text-2xl font-bold text-slate-900 mb-2">Interview Notes</h3>
-                    <p className="text-slate-600">Keep company research, interview questions, and salary data attached directly to the job card.</p>
+                    <div>
+                        <h3 className="text-2xl font-bold text-slate-900 mb-2">Interview Notes</h3>
+                        <p className="text-slate-600">Keep company research, interview questions, and salary data attached directly to the job card.</p>
+                    </div>
                   </div>
                   <div className="flex-grow bg-white rounded-xl shadow-sm border border-brand-100 p-4 rotate-1 group-hover:-rotate-1 group-hover:scale-105 transition-transform duration-500">
                       <div className="flex gap-2 mb-3 border-b border-slate-100 pb-2">
@@ -155,4 +189,4 @@ export const BentoGrid: React.FC = () => {
       </div>
     </section>
   );
-};
+}

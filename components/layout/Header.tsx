@@ -1,17 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, ArrowRight } from 'lucide-react';
+import gsap from 'gsap';
 
 export const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      const currentScrollY = window.scrollY;
+      const isScrollingDown = currentScrollY > lastScrollY.current;
+      const isScrolledPastHeader = currentScrollY > 100;
+
+      // Update styled state
+      setScrolled(currentScrollY > 20);
+
+      // Smart hide/show logic with GSAP
+      if (isScrollingDown && isScrolledPastHeader && !mobileMenuOpen) {
+        gsap.to(header, {
+          y: -100,
+          duration: 0.3,
+          ease: 'power2.out',
+          overwrite: true
+        });
+      } else {
+        gsap.to(header, {
+          y: 0,
+          duration: 0.3,
+          ease: 'power2.out',
+          overwrite: true
+        });
+      }
+
+      lastScrollY.current = currentScrollY;
     };
-    window.addEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [mobileMenuOpen]);
 
   const navLinks = [
     { name: 'Features', href: '#features' },
@@ -22,9 +53,10 @@ export const Header: React.FC = () => {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
+      ref={headerRef}
+      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-500 border-b ${
         scrolled 
-          ? 'bg-white/80 backdrop-blur-md border-slate-200 py-3 shadow-sm' 
+          ? 'bg-white/80 backdrop-blur-xl border-slate-200/50 py-3 shadow-sm' 
           : 'bg-transparent border-transparent py-5'
       }`}
     >

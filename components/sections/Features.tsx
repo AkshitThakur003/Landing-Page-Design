@@ -1,13 +1,42 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ShieldCheck, Zap, Layers, ArrowRight, MousePointer2 } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 export const Features: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Animate each feature block as it comes into view
+      const featureBlocks = gsap.utils.toArray<HTMLElement>(".feature-block");
+      featureBlocks.forEach((block) => {
+        gsap.fromTo(block, 
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: block,
+              start: "top 80%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="py-24 bg-slate-50 overflow-hidden">
+    <section ref={sectionRef} className="py-24 bg-slate-50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 space-y-24">
         
         {/* Feature 1: AI Analysis */}
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="feature-block grid lg:grid-cols-2 gap-16 items-center opacity-0 translate-y-10">
           <div className="order-2 lg:order-1 relative group">
             <div className="absolute inset-0 bg-gradient-to-r from-brand-400 to-purple-500 rounded-3xl rotate-3 blur-2xl opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
             <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 relative overflow-hidden transform hover:scale-[1.01] transition-transform duration-500">
@@ -17,13 +46,12 @@ export const Features: React.FC = () => {
                {/* Inner content wrapper with float animation */}
                <div className="space-y-5 relative z-10 animate-float-subtle">
                   <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                     {/* AI Score Indicator with enhanced glow and pulse */}
+                     {/* AI Score Indicator */}
                      <div className="w-12 h-12 rounded-full bg-white shadow-[0_0_15px_rgba(59,130,246,0.3)] flex items-center justify-center text-brand-600 font-bold text-lg relative overflow-visible animate-breathe">
                         <span className="relative z-10">85</span>
-                        {/* Pulsing ring effects for AI - Multiple rings for radar effect */}
+                        {/* Pulsing ring effects */}
                         <div className="absolute inset-0 bg-brand-400 rounded-full animate-pulse-ring opacity-0"></div>
                         <div className="absolute inset-0 bg-brand-400 rounded-full animate-pulse-ring opacity-0" style={{ animationDelay: '1s' }}></div>
-                        <div className="absolute inset-0 bg-brand-400 rounded-full animate-pulse-ring opacity-0" style={{ animationDelay: '2s' }}></div>
                      </div>
                      <div className="flex-1">
                         <div className="h-2.5 bg-slate-200 rounded-full mb-2 w-full overflow-hidden">
@@ -50,7 +78,7 @@ export const Features: React.FC = () => {
           </div>
           <div className="order-1 lg:order-2">
             <div className="w-12 h-12 bg-brand-100 rounded-2xl flex items-center justify-center text-brand-600 mb-6">
-              <Zap size={24} />
+              <Zap size={24} className="animate-pulse-slow" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Real-time Magic Advice.</h2>
             <p className="text-lg text-slate-600 leading-relaxed mb-6">
@@ -70,10 +98,10 @@ export const Features: React.FC = () => {
         </div>
 
         {/* Feature 2: Job Tracker */}
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="feature-block grid lg:grid-cols-2 gap-16 items-center opacity-0 translate-y-10">
            <div className="order-1 lg:order-1">
             <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
-              <Layers size={24} />
+              <Layers size={24} className="animate-pulse" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Organize the chaos.</h2>
             <p className="text-lg text-slate-600 leading-relaxed mb-6">
@@ -90,7 +118,7 @@ export const Features: React.FC = () => {
              {/* Visual Columns Background */}
              <div className="grid grid-cols-2 gap-4 h-64 relative z-0">
                 <div className="border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50"></div>
-                {/* Target Column Highlighted to suggest drop zone */}
+                {/* Target Column Highlighted */}
                 <div className="border-2 border-dashed border-brand-200/50 rounded-2xl bg-brand-50/30 transition-all duration-300 animate-pulse"></div>
              </div>
 
@@ -132,7 +160,7 @@ export const Features: React.FC = () => {
         </div>
 
          {/* Feature 3: Magic Link */}
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="feature-block grid lg:grid-cols-2 gap-16 items-center opacity-0 translate-y-10">
           <div className="order-2 lg:order-1 relative">
              <div className="bg-slate-900 text-white p-8 rounded-3xl shadow-2xl relative overflow-hidden group hover:scale-[1.01] transition-transform duration-500">
                 {/* Background Glow */}
@@ -178,7 +206,7 @@ export const Features: React.FC = () => {
           </div>
           <div className="order-1 lg:order-2">
             <div className="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 mb-6">
-              <ShieldCheck size={24} />
+              <ShieldCheck size={24} className="animate-breathe" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Frictionless Onboarding.</h2>
             <p className="text-lg text-slate-600 leading-relaxed mb-6">

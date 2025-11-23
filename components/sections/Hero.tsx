@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { CheckCircle2, Sparkles, FileText, Target, TrendingUp } from 'lucide-react';
+import { CheckCircle2, Sparkles, FileText, Target, TrendingUp, Bot } from 'lucide-react';
 import gsap from 'gsap';
 
 export const Hero: React.FC = () => {
@@ -38,11 +38,28 @@ export const Hero: React.FC = () => {
         { x: 0, opacity: 1, duration: 0.5, stagger: 0.05 },
         "-=0.4"
       )
-      // Reveal Right Visual
+      // Reveal Right Visual - Refined Premium Entrance
       .fromTo(visualRef.current,
-        { y: 40, opacity: 0, scale: 0.95 },
-        { y: 0, opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" },
-        "-=1"
+        { 
+          y: 100, 
+          opacity: 0, 
+          scale: 0.85, 
+          rotation: 5, 
+          transformOrigin: "center center",
+          xPercent: -2,
+          filter: "blur(12px)"
+        },
+        { 
+          y: 0, 
+          opacity: 1, 
+          scale: 1.05, 
+          rotation: 0, 
+          xPercent: -2,
+          filter: "blur(0px)",
+          duration: 1.8, 
+          ease: "power3.out" 
+        },
+        "-=0.8"
       );
 
       // 2. Continuous Floating Animation for Visual Elements
@@ -100,37 +117,43 @@ export const Hero: React.FC = () => {
 
   return (
     <section ref={containerRef} className="relative pt-32 pb-20 lg:pt-48 lg:pb-40 overflow-hidden">
+      {/* Subtle Geometric Background Pattern */}
+      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] [mask-image:linear-gradient(to_bottom,white_60%,transparent_100%)] opacity-40 -z-30 pointer-events-none"></div>
+
       {/* Background Elements - Animated */}
       <div className="hero-blob-1 absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-brand-200/40 rounded-full blur-[120px] -z-10 opacity-60 pointer-events-none"></div>
       <div className="hero-blob-2 absolute bottom-0 right-0 w-[800px] h-[600px] bg-purple-200/30 rounded-full blur-[120px] -z-10 opacity-50 pointer-events-none"></div>
 
-      {/* Animated Waves */}
+      {/* Animated Waves - Refined & Organic */}
       <div className="absolute bottom-0 left-0 w-full h-auto overflow-hidden -z-20 pointer-events-none">
-        {/* Wave 1 - Slower, Back */}
-        <div className="relative w-[200%] h-32 sm:h-48 animate-wave-slower flex opacity-40">
+        
+        {/* Wave 1 - Slowest (Back) */}
+        <div className="relative w-[200%] h-32 sm:h-48 animate-wave-slower flex opacity-30">
            <svg className="w-1/2 h-full fill-brand-100" viewBox="0 0 1440 320" preserveAspectRatio="none">
-             <path d="M0,160 C320,300 420,300 720,160 C1020,20 1120,20 1440,160 V320 H0 Z" />
+             <path d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
            </svg>
            <svg className="w-1/2 h-full fill-brand-100" viewBox="0 0 1440 320" preserveAspectRatio="none">
-             <path d="M0,160 C320,300 420,300 720,160 C1020,20 1120,20 1440,160 V320 H0 Z" />
+             <path d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
            </svg>
         </div>
-        {/* Wave 2 - Medium Speed, Middle (New) */}
-        <div className="absolute bottom-0 left-0 w-[200%] h-32 sm:h-48 animate-wave flex opacity-30">
-           <svg className="w-1/2 h-full fill-purple-50" viewBox="0 0 1440 320" preserveAspectRatio="none">
-             <path d="M0,192 C320,280 420,280 720,192 C1020,100 1120,100 1440,192 V320 H0 Z" />
+
+        {/* Wave 2 - Medium Speed (Middle) */}
+        <div className="absolute bottom-0 left-0 w-[200%] h-32 sm:h-48 animate-wave-slow flex opacity-40 -translate-x-[200px]">
+           <svg className="w-1/2 h-full fill-brand-50" viewBox="0 0 1440 320" preserveAspectRatio="none">
+             <path d="M0,256L48,245.3C96,235,192,213,288,192C384,171,480,149,576,160C672,171,768,213,864,224C960,235,1056,213,1152,192C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
            </svg>
-           <svg className="w-1/2 h-full fill-purple-50" viewBox="0 0 1440 320" preserveAspectRatio="none">
-             <path d="M0,192 C320,280 420,280 720,192 C1020,100 1120,100 1440,192 V320 H0 Z" />
+           <svg className="w-1/2 h-full fill-brand-50" viewBox="0 0 1440 320" preserveAspectRatio="none">
+             <path d="M0,256L48,245.3C96,235,192,213,288,192C384,171,480,149,576,160C672,171,768,213,864,224C960,235,1056,213,1152,192C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
            </svg>
         </div>
-        {/* Wave 3 - Faster, Front */}
-        <div className="absolute bottom-0 left-0 w-[200%] h-32 sm:h-48 animate-wave-slow flex opacity-30">
-           <svg className="w-1/2 h-full fill-brand-200" viewBox="0 0 1440 320" preserveAspectRatio="none">
-             <path d="M0,224 C320,100 420,100 720,224 C1020,300 1120,300 1440,224 V320 H0 Z" />
+
+        {/* Wave 3 - Faster (Front) */}
+        <div className="absolute bottom-0 left-0 w-[200%] h-32 sm:h-48 animate-wave flex opacity-20 translate-y-2">
+           <svg className="w-1/2 h-full fill-purple-100" viewBox="0 0 1440 320" preserveAspectRatio="none">
+             <path d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,133.3C672,139,768,181,864,186.7C960,192,1056,160,1152,144C1248,128,1344,128,1392,128L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
            </svg>
-           <svg className="w-1/2 h-full fill-brand-200" viewBox="0 0 1440 320" preserveAspectRatio="none">
-             <path d="M0,224 C320,100 420,100 720,224 C1020,300 1120,300 1440,224 V320 H0 Z" />
+           <svg className="w-1/2 h-full fill-purple-100" viewBox="0 0 1440 320" preserveAspectRatio="none">
+             <path d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,133.3C672,139,768,181,864,186.7C960,192,1056,160,1152,144C1248,128,1344,128,1392,128L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
            </svg>
         </div>
       </div>
@@ -193,13 +216,13 @@ export const Hero: React.FC = () => {
         style={{ animationDuration: '40s', animationDelay: '0s' }}
       ></div>
 
-      {/* NEW 10. Large Faint Triangle Outline */}
+      {/* 10. Large Faint Triangle Outline */}
       <div
         className="absolute top-[25%] right-[30%] w-0 h-0 border-l-[50px] border-l-transparent border-b-[80px] border-b-brand-100/10 border-r-[50px] border-r-transparent rotate-12 animate-float -z-10 pointer-events-none"
         style={{ animationDuration: '30s', animationDelay: '3s' }}
       ></div>
 
-      {/* NEW 11. Subtle Code Brackets */}
+      {/* 11. Subtle Code Brackets */}
       <div 
         className="absolute bottom-[30%] left-[20%] text-slate-300/10 text-6xl font-mono font-bold rotate-[-5deg] animate-float-delayed -z-10 pointer-events-none select-none"
         style={{ animationDuration: '22s', animationDelay: '1s' }}
@@ -207,11 +230,41 @@ export const Hero: React.FC = () => {
         {`{ }`}
       </div>
 
-      {/* NEW 12. Dashed Circle */}
+      {/* 12. Dashed Circle */}
        <div 
         className="absolute top-[15%] right-[20%] w-24 h-24 rounded-full border-2 border-dashed border-slate-200/20 animate-float-slow -z-10 pointer-events-none" 
         style={{ animationDuration: '32s', animationDelay: '7s' }}
       ></div>
+
+      {/* 13. Gradient Pill - Top Right */}
+      <div 
+        className="absolute top-[8%] right-[35%] w-20 h-6 rounded-full bg-gradient-to-r from-brand-100/20 to-purple-100/20 border border-white/20 -rotate-6 animate-float-slow -z-10 pointer-events-none"
+        style={{ animationDuration: '22s', animationDelay: '1.5s' }}
+      ></div>
+
+      {/* 14. Soft Orb - Bottom Center-Right */}
+      <div 
+        className="absolute bottom-[18%] right-[45%] w-16 h-16 bg-brand-400/5 rounded-full blur-xl animate-float -z-10 pointer-events-none"
+        style={{ animationDuration: '19s', animationDelay: '4s' }}
+      ></div>
+
+      {/* 15. Tiny Grid Dots - Top Left */}
+      <div 
+        className="absolute top-[30%] left-[18%] flex gap-1.5 opacity-30 animate-float-delayed -z-10 pointer-events-none"
+        style={{ animationDuration: '25s', animationDelay: '2s' }}
+      >
+        <div className="w-1.5 h-1.5 bg-slate-400/20 rounded-full"></div>
+        <div className="w-1.5 h-1.5 bg-slate-400/20 rounded-full"></div>
+        <div className="w-1.5 h-1.5 bg-slate-400/20 rounded-full"></div>
+      </div>
+
+       {/* 16. Faint Code Symbol - Bottom Right */}
+      <div 
+        className="absolute bottom-[35%] right-[5%] text-slate-300/10 text-5xl font-mono font-bold rotate-[15deg] animate-float-slow -z-10 pointer-events-none select-none"
+        style={{ animationDuration: '28s', animationDelay: '6s' }}
+      >
+        {`/>`}
+      </div>
 
       {/* GSAP Controlled Particles */}
       <div className="bg-particle absolute top-32 left-[8%] w-3 h-3 bg-brand-400 rounded-full opacity-20 -z-10 pointer-events-none"></div>
@@ -269,7 +322,7 @@ export const Hero: React.FC = () => {
         </div>
 
         {/* Right Visual - Abstract Dashboard Mockup */}
-        <div ref={visualRef} className="relative hidden lg:block h-[600px] transform scale-105 -translate-x-[2%]">
+        <div ref={visualRef} className="relative hidden lg:block h-[600px] transform scale-105 -translate-x-[2%] group/visual">
           
           {/* Main Card - Resume Score */}
           <div className="floating-card absolute top-10 left-10 w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-100 p-6 z-20">
@@ -342,8 +395,31 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
+          {/* AI Avatar - Appears on hover */}
+          <div className="absolute top-[15%] -right-4 z-40 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] opacity-0 scale-50 translate-y-8 group-hover/visual:opacity-100 group-hover/visual:scale-100 group-hover/visual:translate-y-0">
+             <div className="relative animate-float-slow">
+                {/* Greeting Bubble */}
+                <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 whitespace-nowrap">
+                   <div className="bg-white/90 backdrop-blur-sm border border-slate-200 px-4 py-2 rounded-2xl rounded-tr-sm shadow-lg text-sm font-medium text-slate-700 transform origin-right scale-0 opacity-0 transition-all duration-300 delay-300 group-hover/visual:scale-100 group-hover/visual:opacity-100">
+                      Hi there! Ready to optimize? 🚀
+                   </div>
+                </div>
+
+                {/* Avatar Circle */}
+                <div className="w-16 h-16 bg-white rounded-full shadow-2xl border-4 border-white flex items-center justify-center relative">
+                   <div className="absolute inset-0 bg-brand-50 rounded-full animate-ping opacity-20 duration-1000"></div>
+                   <div className="w-full h-full bg-gradient-to-br from-brand-500 to-purple-600 rounded-full flex items-center justify-center overflow-hidden relative">
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.4),transparent)]"></div>
+                      <Bot className="text-white w-8 h-8 relative z-10" strokeWidth={1.5} />
+                   </div>
+                   {/* Status Dot */}
+                   <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full z-20"></div>
+                </div>
+             </div>
+          </div>
+
         </div>
       </div>
     </section>
   );
-};
+}

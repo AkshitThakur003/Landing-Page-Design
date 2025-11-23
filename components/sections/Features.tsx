@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { ShieldCheck, Zap, Layers, ArrowRight, MousePointer2 } from 'lucide-react';
+import { ShieldCheck, Zap, Layers, ArrowRight, MousePointer2, Check } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -76,40 +76,49 @@ export const Features: React.FC = () => {
                </div>
             </div>
           </div>
-          <div className="order-1 lg:order-2">
-            <div className="w-12 h-12 bg-brand-100 rounded-2xl flex items-center justify-center text-brand-600 mb-6">
-              <Zap size={24} className="animate-pulse-slow" />
+          
+          {/* Feature 1 Text Content */}
+          <div className="order-1 lg:order-2 group">
+            <div className="relative overflow-hidden w-12 h-12 bg-brand-100 rounded-2xl flex items-center justify-center text-brand-600 mb-6 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-lg group-hover:shadow-brand-500/20 group-hover:bg-brand-200">
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/60 to-transparent -translate-x-full group-hover:animate-shimmer z-10 pointer-events-none" />
+              <Zap size={24} className="relative z-20 transition-transform duration-500" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Real-time Magic Advice.</h2>
-            <p className="text-lg text-slate-600 leading-relaxed mb-6">
-              Our AI doesn't just tell you something is wrong; it fixes it. Receive context-aware suggestions to improve phrasing, grammar, and impact quantification instantly.
-            </p>
-            <ul className="space-y-3">
-               {['Instant grammar checks', 'Tone analysis', 'Keyword optimization'].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-slate-700">
-                     <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                        <CheckIcon />
-                     </div>
-                     {item}
-                  </li>
-               ))}
-            </ul>
+            <div className="transition-transform duration-500 ease-out group-hover:scale-[1.03] origin-left">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Real-time Magic Advice.</h2>
+              <p className="text-lg text-slate-600 leading-relaxed mb-6">
+                Our AI doesn't just tell you something is wrong; it fixes it. Receive context-aware suggestions to improve phrasing, grammar, and impact quantification instantly.
+              </p>
+              <ul className="space-y-3">
+                 {['Instant grammar checks', 'Tone analysis', 'Keyword optimization'].map((item) => (
+                    <li key={item} className="flex items-center gap-3 text-slate-700">
+                       <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                          <Check size={12} />
+                       </div>
+                       {item}
+                    </li>
+                 ))}
+              </ul>
+            </div>
           </div>
         </div>
 
         {/* Feature 2: Job Tracker */}
         <div className="feature-block grid lg:grid-cols-2 gap-16 items-center opacity-0 translate-y-10">
-           <div className="order-1 lg:order-1">
-            <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
-              <Layers size={24} className="animate-pulse" />
+           {/* Feature 2 Text Content */}
+           <div className="order-1 lg:order-1 group">
+            <div className="relative overflow-hidden w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-6 transition-all duration-500 group-hover:scale-110 group-hover:-rotate-3 group-hover:shadow-lg group-hover:shadow-blue-500/20 group-hover:bg-blue-200">
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/60 to-transparent -translate-x-full group-hover:animate-shimmer z-10 pointer-events-none" />
+              <Layers size={24} className="relative z-20 transition-transform duration-500" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Organize the chaos.</h2>
-            <p className="text-lg text-slate-600 leading-relaxed mb-6">
-              Stop using spreadsheets. Our Kanban board is specifically designed for job hunting, with automated reminders to follow up after 3, 7, and 14 days.
-            </p>
-             <button className="text-brand-600 font-semibold hover:text-brand-700 flex items-center gap-2 group">
-               See how it works <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+            <div className="transition-transform duration-500 ease-out group-hover:scale-[1.03] origin-left">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Organize the chaos.</h2>
+              <p className="text-lg text-slate-600 leading-relaxed mb-6">
+                Stop using spreadsheets. Our Kanban board is specifically designed for job hunting, with automated reminders to follow up after 3, 7, and 14 days.
+              </p>
+               <button className="text-brand-600 font-semibold hover:text-brand-700 flex items-center gap-2 group/btn">
+                 See how it works <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+              </button>
+            </div>
           </div>
           
           <div className="order-2 lg:order-2 relative group">
@@ -204,14 +213,19 @@ export const Features: React.FC = () => {
                 </div>
              </div>
           </div>
-          <div className="order-1 lg:order-2">
-            <div className="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 mb-6">
-              <ShieldCheck size={24} className="animate-breathe" />
+          
+          {/* Feature 3 Text Content */}
+          <div className="order-1 lg:order-2 group">
+            <div className="relative overflow-hidden w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 mb-6 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-lg group-hover:shadow-purple-500/20 group-hover:bg-purple-200">
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/60 to-transparent -translate-x-full group-hover:animate-shimmer z-10 pointer-events-none" />
+              <ShieldCheck size={24} className="relative z-20 transition-transform duration-500" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Frictionless Onboarding.</h2>
-            <p className="text-lg text-slate-600 leading-relaxed mb-6">
-              No more passwords to remember. Use our secure Magic Link technology to log in instantly from any device. Your data is encrypted at rest and in transit.
-            </p>
+            <div className="transition-transform duration-500 ease-out group-hover:scale-[1.03] origin-left">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Frictionless Onboarding.</h2>
+              <p className="text-lg text-slate-600 leading-relaxed mb-6">
+                No more passwords to remember. Use our secure Magic Link technology to log in instantly from any device. Your data is encrypted at rest and in transit.
+              </p>
+            </div>
           </div>
         </div>
 
@@ -219,9 +233,3 @@ export const Features: React.FC = () => {
     </section>
   );
 };
-
-const CheckIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="20 6 9 17 4 12"></polyline>
-  </svg>
-);

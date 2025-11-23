@@ -12,6 +12,9 @@ export const Header: React.FC = () => {
     const header = headerRef.current;
     if (!header) return;
 
+    // Initialize lastScrollY to current position to prevent wrong direction detection on initial scroll
+    lastScrollY.current = window.scrollY;
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const isScrollingDown = currentScrollY > lastScrollY.current;
@@ -23,14 +26,14 @@ export const Header: React.FC = () => {
       // Smart hide/show logic with GSAP
       if (isScrollingDown && isScrolledPastHeader && !mobileMenuOpen) {
         gsap.to(header, {
-          y: -100,
+          y: '-100%',
           duration: 0.3,
           ease: 'power2.out',
           overwrite: true
         });
       } else {
         gsap.to(header, {
-          y: 0,
+          y: '0%',
           duration: 0.3,
           ease: 'power2.out',
           overwrite: true
@@ -54,9 +57,9 @@ export const Header: React.FC = () => {
   return (
     <header 
       ref={headerRef}
-      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-500 border-b ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b ${
         scrolled 
-          ? 'bg-white/80 backdrop-blur-xl border-slate-200/50 py-3 shadow-sm' 
+          ? 'bg-white/75 backdrop-blur-md border-slate-200/60 py-3 shadow-sm supports-[backdrop-filter]:bg-white/60' 
           : 'bg-transparent border-transparent py-5'
       }`}
     >

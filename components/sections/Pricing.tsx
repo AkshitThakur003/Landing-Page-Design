@@ -1,15 +1,19 @@
-import React, { useState, useRef, useEffect } from 'react';
+
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { Check } from 'lucide-react';
 import gsap from 'gsap';
 
 export const Pricing: React.FC = () => {
   const [isAnnual, setIsAnnual] = useState(true);
   const containerRef = useRef<HTMLElement>(null);
+  const priceValueRef = useRef<HTMLSpanElement>(null);
+  const initialRender = useRef(true);
 
   // Pricing constants
   const monthlyPrice = 15;
   const discountPercentage = 0.20;
   const discountedMonthlyPrice = Math.round(monthlyPrice * (1 - discountPercentage)); // 12
+  const annualTotal = discountedMonthlyPrice * 12;
 
   // GSAP Micro-interactions for hover
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -58,6 +62,31 @@ export const Pricing: React.FC = () => {
     return () => ctx.revert();
   }, []);
 
+  // Price Number Animation
+  useLayoutEffect(() => {
+    if (!priceValueRef.current) return;
+
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+
+    const start = isAnnual ? monthlyPrice : discountedMonthlyPrice;
+    const end = isAnnual ? discountedMonthlyPrice : monthlyPrice;
+    const obj = { val: start };
+
+    gsap.to(obj, {
+        val: end,
+        duration: 0.5,
+        ease: "power2.out",
+        onUpdate: () => {
+            if (priceValueRef.current) {
+                priceValueRef.current.textContent = Math.round(obj.val).toString();
+            }
+        }
+    });
+  }, [isAnnual]);
+
   return (
     <section ref={containerRef} id="pricing" className="py-24 bg-slate-50">
       <div className="max-w-7xl mx-auto px-6">
@@ -66,17 +95,39 @@ export const Pricing: React.FC = () => {
           <p className="text-slate-600 mb-8">Invest in your future for less than the cost of a coffee.</p>
           
           {/* Toggle - Glassmorphism pill container */}
-          <div className="inline-flex items-center justify-center gap-4 bg-white/80 backdrop-blur-md border border-slate-200 py-2.5 px-6 rounded-full shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.12)] transition-all duration-300">
-            <span className={`text-sm font-medium transition-colors duration-300 ${!isAnnual ? 'text-slate-900' : 'text-slate-500'}`}>Monthly</span>
+          <div className="inline-flex items-center justify-center gap-4 bg-white/60 backdrop-blur-xl border border-white/60 py-2.5 px-6 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 group select-none">
+            <span 
+              className={`text-sm font-medium transition-colors duration-300 cursor-pointer ${!isAnnual ? 'text-slate-900' : 'text-slate-500 group-hover:text-slate-600'}`}
+              onClick={() => setIsAnnual(false)}
+            >
+              Monthly
+            </span>
+            
             <button 
               onClick={() => setIsAnnual(!isAnnual)}
-              className="relative w-16 h-9 bg-slate-200 rounded-full p-1 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-inner"
+              className={`relative w-14 h-8 rounded-full p-1 transition-all duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/20 cursor-pointer border active:scale-95 backdrop-blur-sm
+                ${isAnnual 
+                  ? 'bg-brand-100/50 border-brand-200 shadow-[inset_0_2px_6px_rgba(59,130,246,0.15)]' 
+                  : 'bg-slate-200/40 border-slate-300/50 shadow-[inset_0_2px_6px_rgba(0,0,0,0.06)]'
+                }
+              `}
               aria-label="Toggle pricing interval"
             >
-              <div className={`w-7 h-7 bg-white rounded-full shadow-sm transform transition-transform duration-300 ${isAnnual ? 'translate-x-7' : 'translate-x-0'}`}></div>
+              <div 
+                className={`w-6 h-6 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.1),0_2px_4px_rgba(0,0,0,0.05)] border border-white/80 bg-white
+                transform transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] 
+                ${isAnnual ? 'translate-x-6' : 'translate-x-0'} relative`}
+              >
+                {/* Specular highlight for glass feel */}
+                <div className="absolute top-0.5 left-1 right-1 h-2 bg-gradient-to-b from-white to-transparent opacity-90 rounded-t-full"></div>
+              </div>
             </button>
-            <span className={`text-sm font-medium transition-colors duration-300 ${isAnnual ? 'text-slate-900' : 'text-slate-500'}`}>
-              Yearly <span className="text-brand-600 text-xs font-bold bg-brand-100 px-2 py-0.5 rounded-full ml-1">-20%</span>
+
+            <span 
+              className={`text-sm font-medium transition-colors duration-300 cursor-pointer ${isAnnual ? 'text-slate-900' : 'text-slate-500 group-hover:text-slate-600'}`}
+              onClick={() => setIsAnnual(true)}
+            >
+              Yearly <span className="text-brand-600 text-xs font-bold bg-brand-50 border border-brand-100 px-2 py-0.5 rounded-full ml-1">-20%</span>
             </span>
           </div>
         </div>
@@ -91,10 +142,16 @@ export const Pricing: React.FC = () => {
           >
             <h3 className="text-xl font-bold text-slate-900 mb-2">Starter</h3>
             <p className="text-slate-500 text-sm mb-6">Perfect for polishing your existing resume.</p>
-            <div className="flex items-baseline gap-1 mb-6">
-              <span className="text-4xl font-extrabold text-slate-900">$0</span>
-              <span className="text-slate-500">/month</span>
+            <div className="flex flex-col mb-6">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-extrabold text-slate-900">$0</span>
+                  <span className="text-slate-500">/month</span>
+                </div>
+                <p className="text-xs text-slate-400 mt-1 h-4">
+                    Forever free
+                </p>
             </div>
+            
             <button className="w-full py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-900 font-semibold rounded-xl transition-colors mb-8">
               Get Started Free
             </button>
@@ -117,10 +174,27 @@ export const Pricing: React.FC = () => {
             <div className="absolute top-0 right-0 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl">POPULAR</div>
             <h3 className="text-xl font-bold text-white mb-2">Pro Career</h3>
             <p className="text-slate-400 text-sm mb-6">Full AI power to land your dream job.</p>
-            <div className="flex items-baseline gap-1 mb-6">
-              <span className="text-4xl font-extrabold text-white">${isAnnual ? discountedMonthlyPrice : monthlyPrice}</span>
-              <span className="text-slate-400">/month</span>
+            
+            <div className="flex flex-col mb-6">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-extrabold text-white flex">
+                    $
+                    <span ref={priceValueRef}>
+                      {isAnnual ? discountedMonthlyPrice : monthlyPrice}
+                    </span>
+                  </span>
+                  <span className="text-slate-400">/month</span>
+                </div>
+                <div className="h-4 relative overflow-hidden mt-1">
+                  <p 
+                    key={isAnnual ? 'yearly' : 'monthly'}
+                    className="text-xs text-slate-500 absolute top-0 left-0 animate-fade-in-up"
+                  >
+                      {isAnnual ? `$${annualTotal} billed yearly` : 'Billed monthly'}
+                  </p>
+                </div>
             </div>
+            
              <button className="w-full py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl transition-colors mb-8 shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40">
               Start 7-Day Trial
             </button>

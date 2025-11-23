@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import gsap from 'gsap';
 
 const faqs = [
   {
     question: "How does the AI analysis work?",
-    answer: "We use advanced NLP (Natural Language Processing) to read your resume exactly how an ATS (Applicant Tracking System) and a human recruiter would. We compare your content against millions of successful resumes to identify gaps, weak verbs, and missing keywords."
+    answer: "We use advanced NLP (Natural Language Processing) to read your resume exactly how an ATS (Applicant Tracking System) and a human recruiter would. We compare your content against millions of successful profiles to identify gaps, weak verbs, and missing keywords."
   },
   {
     question: "Can I import my existing resume?",
@@ -21,19 +21,46 @@ const faqs = [
   }
 ];
 
-const FAQItem = ({ faq, isOpen, onClick }: { faq: typeof faqs[0], isOpen: boolean, onClick: () => void }) => {
+const FAQItem = ({ faq, isOpen, onClick, id }: { faq: typeof faqs[0], isOpen: boolean, onClick: () => void, id: string }) => {
   const contentRef = useRef<HTMLDivElement>(null);
+  const contentId = `${id}-content`;
+  const headerId = `${id}-header`;
   
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+
+    // Ensure we kill any running animations to allow smooth interruption
+    gsap.killTweensOf(el);
+
     if (isOpen) {
-      gsap.to(contentRef.current, {
-        height: "auto",
+      // 1. Capture start height (useful if interrupting a close animation)
+      const startHeight = el.offsetHeight;
+      
+      // 2. Measure target height by setting to auto temporarily
+      gsap.set(el, { height: 'auto' });
+      const targetHeight = el.scrollHeight;
+      
+      // 3. Reset to start height immediately
+      gsap.set(el, { height: startHeight });
+
+      // 4. Animate to target
+      gsap.to(el, {
+        height: targetHeight,
         opacity: 1,
         duration: 0.4,
-        ease: "power2.out"
+        ease: "power2.out",
+        onComplete: () => {
+          // Set to auto after animation to accommodate window resizing/text wrapping
+          gsap.set(el, { height: "auto" });
+        }
       });
     } else {
-      gsap.to(contentRef.current, {
+      // 1. Explicitly set height to current pixel height (handles 'auto' state)
+      gsap.set(el, { height: el.offsetHeight });
+      
+      // 2. Animate to closed
+      gsap.to(el, {
         height: 0,
         opacity: 0,
         duration: 0.3,
@@ -49,7 +76,10 @@ const FAQItem = ({ faq, isOpen, onClick }: { faq: typeof faqs[0], isOpen: boolea
       }`}
     >
       <button 
-        className="w-full flex items-center justify-between p-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-inset rounded-2xl group select-none"
+        id={headerId}
+        aria-expanded={isOpen}
+        aria-controls={contentId}
+        className="w-full flex items-center justify-between p-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-inset rounded-2xl group select-none transition-all"
         onClick={onClick}
       >
         <span className={`font-semibold text-lg transition-colors duration-300 ${
@@ -57,18 +87,23 @@ const FAQItem = ({ faq, isOpen, onClick }: { faq: typeof faqs[0], isOpen: boolea
         }`}>
           {faq.question}
         </span>
+        {/* Animated Chevron Wrapper */}
         <div 
-          className={`relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-            isOpen ? 'bg-brand-100 text-brand-600 rotate-180' : 'bg-slate-100 text-slate-500 group-hover:bg-brand-50 group-hover:text-brand-500 rotate-0'
-        }`}>
-          <ChevronDown 
-            size={20}
-          />
+          className={`relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-[400ms] ease-in-out ${
+            isOpen 
+              ? 'bg-brand-100 text-brand-600 rotate-180' 
+              : 'bg-slate-100 text-slate-500 rotate-0 group-hover:bg-brand-50 group-hover:text-brand-500'
+          }`}
+        >
+          <ChevronDown size={20} />
         </div>
       </button>
       <div 
+        id={contentId}
+        role="region"
+        aria-labelledby={headerId}
         ref={contentRef}
-        className="overflow-hidden h-0 opacity-0"
+        className="overflow-hidden h-0 opacity-0 origin-top"
       >
         <div className="px-6 pb-6 pt-0 text-slate-600 leading-relaxed">
           {faq.answer}
@@ -109,6 +144,7 @@ export const FAQ: React.FC = () => {
           {faqs.map((faq, index) => (
             <FAQItem 
               key={index} 
+              id={`faq-${index}`}
               faq={faq} 
               isOpen={openIndex === index} 
               onClick={() => setOpenIndex(openIndex === index ? null : index)} 
